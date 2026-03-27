@@ -41,7 +41,20 @@ const Button = ({ children, variant = 'primary', className = '', ...props }: any
 };
 
 const Modal = ({ isOpen, onClose, title, type }: any) => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsSubmitted(false);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+  };
 
   return (
     <AnimatePresence>
@@ -60,55 +73,91 @@ const Modal = ({ isOpen, onClose, title, type }: any) => {
           </button>
           
           <div className="p-8">
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">{title}</h3>
-            <p className="text-sm text-slate-500 mb-6">
-              {type === 'trial' 
-                ? "Start your 14-day free trial. No credit card required." 
-                : "Schedule a personalized walkthrough with our experts."}
-            </p>
-            
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
-                <input type="text" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="Rahul Sharma" />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Work Email</label>
-                <input type="email" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="rahul@company.com" />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Phone Number</label>
-                <div className="flex">
-                  <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 text-slate-500 text-sm">
-                    +91
-                  </span>
-                  <input type="tel" className="flex-1 px-4 py-2 border border-slate-300 rounded-r-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="98765 43210" />
+            {isSubmitted ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle2 className="w-8 h-8 text-emerald-600" />
                 </div>
-              </div>
-              
-              {type === 'demo' && (
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Company Size</label>
-                  <select className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-white">
-                    <option>1-10 Employees</option>
-                    <option>11-50 Employees</option>
-                    <option>51-200 Employees</option>
-                    <option>201+ Employees</option>
-                  </select>
-                </div>
-              )}
-              
-              <div className="pt-2">
-                <Button className="w-full">
-                  {type === 'trial' ? "Create Account" : "Confirm Booking"}
-                </Button>
-                <p className="text-xs text-center text-slate-500 mt-4">
-                  By submitting, you agree to our Terms of Service and Privacy Policy.
+                <h3 className="text-2xl font-bold text-slate-900 mb-2">
+                  {type === 'login' ? 'Welcome back!' : type === 'demo' ? 'Demo Booked!' : 'Account Created!'}
+                </h3>
+                <p className="text-slate-500 mb-6">
+                  {type === 'login' 
+                    ? "You have successfully logged into your account." 
+                    : type === 'demo'
+                    ? "Our team will contact you shortly to schedule your personalized walkthrough."
+                    : "Your 14-day free trial has started. Check your email for login details."}
                 </p>
+                <Button className="w-full" onClick={onClose}>Close</Button>
               </div>
-            </form>
+            ) : (
+              <>
+                <h3 className="text-2xl font-bold text-slate-900 mb-2">{title}</h3>
+                <p className="text-sm text-slate-500 mb-6">
+                  {type === 'trial' 
+                    ? "Start your 14-day free trial. No credit card required." 
+                    : type === 'demo'
+                    ? "Schedule a personalized walkthrough with our experts."
+                    : "Enter your credentials to access your dashboard."}
+                </p>
+                
+                <form className="space-y-4" onSubmit={handleSubmit}>
+                  {type !== 'login' && (
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+                      <input required type="text" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="Rahul Sharma" />
+                    </div>
+                  )}
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Work Email</label>
+                    <input required type="email" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="rahul@company.com" />
+                  </div>
+
+                  {type === 'login' && (
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                      <input required type="password" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="••••••••" />
+                    </div>
+                  )}
+                  
+                  {type !== 'login' && (
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">Phone Number</label>
+                      <div className="flex">
+                        <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 text-slate-500 text-sm">
+                          +91
+                        </span>
+                        <input required type="tel" className="flex-1 px-4 py-2 border border-slate-300 rounded-r-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="98765 43210" />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {type === 'demo' && (
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">Company Size</label>
+                      <select className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-white">
+                        <option>1-10 Employees</option>
+                        <option>11-50 Employees</option>
+                        <option>51-200 Employees</option>
+                        <option>201+ Employees</option>
+                      </select>
+                    </div>
+                  )}
+                  
+                  <div className="pt-2">
+                    <Button className="w-full" type="submit">
+                      {type === 'trial' ? "Create Account" : type === 'demo' ? "Confirm Booking" : "Log In"}
+                    </Button>
+                    {type !== 'login' && (
+                      <p className="text-xs text-center text-slate-500 mt-4">
+                        By submitting, you agree to our Terms of Service and Privacy Policy.
+                      </p>
+                    )}
+                  </div>
+                </form>
+              </>
+            )}
           </div>
         </motion.div>
       </div>
@@ -147,7 +196,7 @@ const Navbar = ({ onOpenModal }: any) => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" className="px-4 py-2">Log in</Button>
+            <Button variant="ghost" className="px-4 py-2" onClick={() => onOpenModal('login')}>Log in</Button>
             <Button className="px-5 py-2" onClick={() => onOpenModal('demo')}>Book Demo</Button>
           </div>
 
@@ -164,7 +213,7 @@ const Navbar = ({ onOpenModal }: any) => {
           <a href="#workflow" className="text-base font-medium text-slate-700" onClick={() => setIsMobileMenuOpen(false)}>How it Works</a>
           <a href="#pricing" className="text-base font-medium text-slate-700" onClick={() => setIsMobileMenuOpen(false)}>Pricing</a>
           <div className="pt-4 border-t border-slate-100 flex flex-col space-y-3">
-            <Button variant="secondary" className="w-full justify-center">Log in</Button>
+            <Button variant="secondary" className="w-full justify-center" onClick={() => { setIsMobileMenuOpen(false); onOpenModal('login'); }}>Log in</Button>
             <Button className="w-full justify-center" onClick={() => { setIsMobileMenuOpen(false); onOpenModal('demo'); }}>Book Demo</Button>
           </div>
         </div>
@@ -806,11 +855,16 @@ const Footer = () => {
 export default function App() {
   const [modalState, setModalState] = useState({ isOpen: false, type: 'trial', title: '' });
 
-  const openModal = (type: 'trial' | 'demo') => {
+  const openModal = (type: 'trial' | 'demo' | 'login') => {
+    let title = '';
+    if (type === 'trial') title = 'Start Free Trial';
+    else if (type === 'demo') title = 'Book a Live Demo';
+    else if (type === 'login') title = 'Welcome Back';
+
     setModalState({
       isOpen: true,
       type,
-      title: type === 'trial' ? 'Start Free Trial' : 'Book a Live Demo'
+      title
     });
   };
 
