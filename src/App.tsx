@@ -19,8 +19,14 @@ import {
   Briefcase, 
   IndianRupee, 
   Star,
-  PlayCircle
+  PlayCircle,
+  Mail,
+  Phone,
+  MapPin
 } from 'lucide-react';
+
+import { db } from './firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 // --- UI Components ---
 
@@ -62,14 +68,14 @@ const Modal = ({ isOpen, onClose, title, type, onLogin, onDemoBooked }: any) => 
     setError('');
 
     if (type === 'login') {
-      if (email === 'admin@paybill.com' && password === 'admin123') {
+      if (email === 'admin@digitalsoftware.com' && password === 'admin123') {
         setIsSubmitted(true);
         onLogin({ name: 'Admin User', email });
         setTimeout(() => {
           onClose();
         }, 2000);
       } else {
-        setError('Invalid email or password. Try admin@paybill.com / admin123');
+        setError('Invalid email or password. Try admin@digitalsoftware.com / admin123');
       }
     } else if (type === 'demo') {
       setIsSubmitted(true);
@@ -127,7 +133,7 @@ const Modal = ({ isOpen, onClose, title, type, onLogin, onDemoBooked }: any) => 
                     ? "Start your 14-day free trial. No credit card required." 
                     : type === 'demo'
                     ? "Schedule a personalized walkthrough with our experts."
-                    : "Enter your credentials to access your dashboard. (Try admin@paybill.com / admin123)"}
+                    : "Enter your credentials to access your dashboard. (Try admin@digitalsoftware.com / admin123)"}
                 </p>
                 
                 <form className="space-y-4" onSubmit={handleSubmit}>
@@ -152,7 +158,7 @@ const Modal = ({ isOpen, onClose, title, type, onLogin, onDemoBooked }: any) => 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" 
-                      placeholder={type === 'login' ? "admin@paybill.com" : "rahul@company.com"} 
+                      placeholder={type === 'login' ? "admin@digitalsoftware.com" : "rahul@company.com"} 
                     />
                   </div>
 
@@ -234,7 +240,7 @@ const Navbar = ({ onOpenModal, loggedInUser, onLogout }: any) => {
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
               <IndianRupee className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-slate-900 tracking-tight">PayBill<span className="text-indigo-600">India</span></span>
+            <span className="text-xl font-bold text-slate-900 tracking-tight">Digital<span className="text-indigo-600">Software</span></span>
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
@@ -419,7 +425,7 @@ const ProblemSolution = () => {
           <div className="bg-indigo-50 rounded-2xl p-8 border border-indigo-100 relative overflow-hidden">
             <div className="absolute -right-10 -top-10 w-40 h-40 bg-indigo-100 rounded-full blur-3xl opacity-50"></div>
             <h3 className="text-xl font-bold text-indigo-900 mb-6 flex items-center gap-2 relative z-10">
-              <CheckCircle2 className="w-6 h-6 text-indigo-600" /> The PayBill Way
+              <CheckCircle2 className="w-6 h-6 text-indigo-600" /> The DigitalSoftware Way
             </h3>
             <ul className="space-y-4 relative z-10">
               {[
@@ -470,11 +476,19 @@ const Features = () => {
 
         {/* HRMS Features */}
         <div className="mb-24">
-          <div className="flex items-center gap-4 mb-10">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-              <Briefcase className="w-6 h-6 text-blue-600" />
+          <div className="flex flex-col lg:flex-row gap-12 items-center mb-12">
+            <div className="flex-1">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <Briefcase className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="text-2xl md:text-3xl font-bold text-slate-900">Payroll & HRMS</h3>
+              </div>
+              <p className="text-lg text-slate-600 mb-8 max-w-xl">Manage your entire workforce from onboarding to exit. Automate salary calculations, ensure statutory compliance, and empower employees with self-service tools.</p>
             </div>
-            <h3 className="text-2xl font-bold text-slate-900">Payroll & HRMS</h3>
+            <div className="flex-1 w-full">
+              <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1000&q=80" alt="HR Management Dashboard" className="rounded-2xl shadow-xl w-full object-cover aspect-video" referrerPolicy="no-referrer" />
+            </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {hrFeatures.map((feature, i) => (
@@ -491,11 +505,19 @@ const Features = () => {
 
         {/* Billing Features */}
         <div>
-          <div className="flex items-center gap-4 mb-10">
-            <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-              <Building2 className="w-6 h-6 text-emerald-600" />
+          <div className="flex flex-col lg:flex-row-reverse gap-12 items-center mb-12">
+            <div className="flex-1">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                  <Building2 className="w-6 h-6 text-emerald-600" />
+                </div>
+                <h3 className="text-2xl md:text-3xl font-bold text-slate-900">Retail & GST Billing</h3>
+              </div>
+              <p className="text-lg text-slate-600 mb-8 max-w-xl">Streamline your retail operations with our lightning-fast POS. Generate GST-compliant invoices, track inventory in real-time, and get actionable sales insights.</p>
             </div>
-            <h3 className="text-2xl font-bold text-slate-900">Retail & GST Billing</h3>
+            <div className="flex-1 w-full">
+              <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=80" alt="Retail POS System" className="rounded-2xl shadow-xl w-full object-cover aspect-video" referrerPolicy="no-referrer" />
+            </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {billingFeatures.map((feature, i) => (
@@ -529,7 +551,7 @@ const Workflow = () => {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">How PayBill Works</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">How DigitalSoftware Works</h2>
           <p className="text-lg text-slate-400">A streamlined workflow designed to save you 40+ hours every month.</p>
         </div>
 
@@ -620,7 +642,7 @@ const Pricing = ({ onOpenModal }: any) => {
                 </li>
               ))}
             </ul>
-            <Button variant="outline" className="w-full" onClick={() => onOpenModal('demo')}>Contact Sales</Button>
+            <Button variant="outline" className="w-full" onClick={() => onOpenModal('demo')}>Book Demo</Button>
           </div>
         </div>
       </div>
@@ -631,7 +653,7 @@ const Pricing = ({ onOpenModal }: any) => {
 const Testimonials = () => {
   const reviews = [
     {
-      quote: "Before PayBill, month-end payroll took us 3 days and we still made PF calculation errors. Now it takes 15 minutes. The GST billing is just a bonus for our retail outlet.",
+      quote: "Before DigitalSoftware, month-end payroll took us 3 days and we still made PF calculation errors. Now it takes 15 minutes. The GST billing is just a bonus for our retail outlet.",
       author: "Rajesh Kumar",
       role: "Director, Sharma Electronics",
       rating: 5
@@ -643,7 +665,7 @@ const Testimonials = () => {
       rating: 5
     },
     {
-      quote: "We switched from using separate software for accounting and HR. PayBill India unified everything. Their support team actually understands Indian compliance laws.",
+      quote: "We switched from using separate software for accounting and HR. DigitalSoftware unified everything. Their support team actually understands Indian compliance laws.",
       author: "Amit Patel",
       role: "HR Head, Apex Manufacturing",
       rating: 5
@@ -793,6 +815,8 @@ const DashboardPreview = () => {
 };
 
 const DemoPresentation = ({ isUnlocked }: { isUnlocked: boolean }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+
   if (!isUnlocked) return null;
 
   return (
@@ -807,8 +831,8 @@ const DemoPresentation = ({ isUnlocked }: { isUnlocked: boolean }) => {
             <CheckCircle2 className="w-5 h-5" />
             Demo Successfully Unlocked
           </motion.div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">PayBill India Interactive Demo</h2>
-          <p className="text-lg text-slate-400">Watch the presentation below to see how PayBill can transform your business.</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">DigitalSoftware Interactive Demo</h2>
+          <p className="text-lg text-slate-400">Watch the presentation below to see how DigitalSoftware can transform your business.</p>
         </div>
 
         <motion.div 
@@ -817,16 +841,34 @@ const DemoPresentation = ({ isUnlocked }: { isUnlocked: boolean }) => {
           transition={{ delay: 0.2 }}
           className="aspect-video bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl relative flex items-center justify-center group"
         >
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000')] opacity-40 bg-cover bg-center mix-blend-overlay"></div>
-          <div className="absolute inset-0 bg-slate-900/60 group-hover:bg-slate-900/50 transition-colors"></div>
-          
-          <div className="relative z-10 text-center">
-            <div className="w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 cursor-pointer hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/30 group-hover:scale-110 transform duration-300">
-              <PlayCircle className="w-10 h-10 text-white ml-1" />
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-2">Product Walkthrough</h3>
-            <p className="text-slate-300">12:45 Mins • Full Platform Overview</p>
-          </div>
+          {!isPlaying ? (
+            <>
+              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000')] opacity-40 bg-cover bg-center mix-blend-overlay"></div>
+              <div className="absolute inset-0 bg-slate-900/60 group-hover:bg-slate-900/50 transition-colors"></div>
+              
+              <div className="relative z-10 text-center">
+                <div 
+                  onClick={() => setIsPlaying(true)}
+                  className="w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 cursor-pointer hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/30 group-hover:scale-110 transform duration-300"
+                >
+                  <PlayCircle className="w-10 h-10 text-white ml-1" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">Product Walkthrough</h3>
+                <p className="text-slate-300">12:45 Mins • Full Platform Overview</p>
+              </div>
+            </>
+          ) : (
+            <iframe 
+              width="100%" 
+              height="100%" 
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" 
+              title="Product Walkthrough" 
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowFullScreen
+              className="absolute inset-0 w-full h-full rounded-2xl"
+            ></iframe>
+          )}
         </motion.div>
       </div>
     </section>
@@ -904,7 +946,7 @@ const Footer = () => {
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                 <IndianRupee className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white tracking-tight">PayBill<span className="text-indigo-500">India</span></span>
+              <span className="text-xl font-bold text-white tracking-tight">Digital<span className="text-indigo-500">Software</span></span>
             </div>
             <p className="text-sm text-slate-400 mb-6">
               The unified platform for Indian SMBs to manage payroll, compliance, and retail billing effortlessly.
@@ -934,8 +976,8 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-semibold mb-4">Company</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              <li><a href="#about" className="hover:text-white transition-colors">About Us</a></li>
+              <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
             </ul>
@@ -943,7 +985,7 @@ const Footer = () => {
         </div>
         
         <div className="pt-8 border-t border-slate-800 text-sm text-slate-500 flex flex-col md:flex-row justify-between items-center">
-          <p>© 2026 PayBill India Technologies Pvt. Ltd. All rights reserved.</p>
+          <p>© 2026 DigitalSoftware Technologies Pvt. Ltd. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             {/* Social Icons Placeholder */}
             <div className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 cursor-pointer"></div>
@@ -953,6 +995,188 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+  );
+};
+
+const AboutUs = () => {
+  return (
+    <section id="about" className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">About DigitalSoftware</h2>
+          <p className="text-lg text-slate-600">We are on a mission to simplify business operations for Indian SMBs through powerful, intuitive, and compliant software.</p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Our Team" className="rounded-2xl shadow-lg" referrerPolicy="no-referrer" />
+          </div>
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-slate-900">Empowering Businesses Since 2020</h3>
+            <p className="text-slate-600">DigitalSoftware was founded with a simple idea: managing payroll, HR, and retail billing shouldn't require multiple disjointed systems. We built an all-in-one platform that brings everything together.</p>
+            <p className="text-slate-600">Today, thousands of businesses across India trust us to handle their most critical operations, ensuring 100% compliance with GST, PF, and ESIC regulations.</p>
+            <div className="grid grid-cols-2 gap-6 pt-4">
+              <div>
+                <div className="text-3xl font-bold text-indigo-600 mb-1">10k+</div>
+                <div className="text-sm text-slate-500 font-medium">Active Users</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-indigo-600 mb-1">99.9%</div>
+                <div className="text-sm text-slate-500 font-medium">Uptime SLA</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const ContactUs = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
+    
+    try {
+      await addDoc(collection(db, 'contactMessages'), {
+        firstName,
+        lastName,
+        email,
+        message,
+        createdAt: serverTimestamp()
+      });
+      setSubmitSuccess(true);
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setMessage('');
+      setTimeout(() => setSubmitSuccess(false), 5000);
+    } catch (err: any) {
+      console.error("Error submitting form:", err);
+      setError("Failed to send message. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <section id="contact" className="py-24 bg-slate-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Get in Touch</h2>
+          <p className="text-lg text-slate-600">Have questions? Our team is here to help you get started with DigitalSoftware.</p>
+        </div>
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-1 space-y-8">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
+                <Mail className="w-6 h-6 text-indigo-600" />
+              </div>
+              <div>
+                <h4 className="text-lg font-bold text-slate-900 mb-1">Email Us</h4>
+                <p className="text-slate-600 mb-2">Our friendly team is here to help.</p>
+                <a href="mailto:adarshsupport@dev2dev.in" className="text-indigo-600 font-medium hover:text-indigo-700">adarshsupport@dev2dev.in</a>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
+                <Phone className="w-6 h-6 text-indigo-600" />
+              </div>
+              <div>
+                <h4 className="text-lg font-bold text-slate-900 mb-1">Call Us</h4>
+                <p className="text-slate-600 mb-2">Mon-Fri from 9am to 6pm.</p>
+                <a href="tel:+917089850933" className="text-indigo-600 font-medium hover:text-indigo-700">+91 7089850933</a>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
+                <MapPin className="w-6 h-6 text-indigo-600" />
+              </div>
+              <div>
+                <h4 className="text-lg font-bold text-slate-900 mb-1">Office</h4>
+                <p className="text-slate-600">123 Tech Park, Sector 4<br/>HSR Layout, Bengaluru<br/>Karnataka 560102, India</p>
+              </div>
+            </div>
+          </div>
+          <div className="lg:col-span-2 bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+            {submitSuccess ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 mb-2">Message Sent!</h3>
+                <p className="text-slate-600">Thank you for reaching out. Our team will get back to you shortly.</p>
+              </div>
+            ) : (
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                {error && (
+                  <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+                    {error}
+                  </div>
+                )}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">First Name</label>
+                    <input 
+                      type="text" 
+                      required 
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" 
+                      placeholder="First name" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Last Name</label>
+                    <input 
+                      type="text" 
+                      required 
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" 
+                      placeholder="Last name" 
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Work Email</label>
+                  <input 
+                    type="email" 
+                    required 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" 
+                    placeholder="you@company.com" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Message</label>
+                  <textarea 
+                    required 
+                    rows={4} 
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all resize-none" 
+                    placeholder="How can we help you?"
+                  ></textarea>
+                </div>
+                <Button type="submit" className="w-full py-3 text-lg" disabled={isSubmitting}>
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </Button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
@@ -1002,7 +1226,9 @@ export default function App() {
         <DemoPresentation isUnlocked={isDemoUnlocked} />
         <Pricing onOpenModal={openModal} />
         <Testimonials />
+        <AboutUs />
         <TrustSection />
+        <ContactUs />
         <CtaSection onOpenModal={openModal} />
       </main>
       <Footer />
