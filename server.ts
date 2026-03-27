@@ -29,7 +29,7 @@ app.post("/api/contact", async (req, res) => {
   try {
     const resend = getResend();
     if (resend) {
-      await resend.emails.send({
+      const { data, error } = await resend.emails.send({
         from: "DigitalSoftware <onboarding@resend.dev>", // Resend testing domain
         to: ["adarshsupport@dev2dev.in"],
         subject: `New Contact Message from ${firstName} ${lastName}`,
@@ -42,7 +42,13 @@ app.post("/api/contact", async (req, res) => {
           <p>${message}</p>
         `,
       });
-      console.log("Email sent successfully via Resend.");
+
+      if (error) {
+        console.error("Resend API Error:", error);
+        return res.status(400).json({ error: error.message });
+      }
+
+      console.log("Email sent successfully via Resend:", data);
     } else {
       console.warn("RESEND_API_KEY is not set. Email not sent, but message saved to database.");
     }
