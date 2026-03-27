@@ -40,12 +40,18 @@ const Button = ({ children, variant = 'primary', className = '', ...props }: any
   );
 };
 
-const Modal = ({ isOpen, onClose, title, type }: any) => {
+const Modal = ({ isOpen, onClose, title, type, onLogin, onDemoBooked }: any) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (isOpen) {
       setIsSubmitted(false);
+      setEmail('');
+      setPassword('');
+      setError('');
     }
   }, [isOpen]);
 
@@ -53,7 +59,30 @@ const Modal = ({ isOpen, onClose, title, type }: any) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    setError('');
+
+    if (type === 'login') {
+      if (email === 'admin@paybill.com' && password === 'admin123') {
+        setIsSubmitted(true);
+        onLogin({ name: 'Admin User', email });
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      } else {
+        setError('Invalid email or password. Try admin@paybill.com / admin123');
+      }
+    } else if (type === 'demo') {
+      setIsSubmitted(true);
+      onDemoBooked();
+      setTimeout(() => {
+        onClose();
+        setTimeout(() => {
+          document.getElementById('demo-presentation')?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }, 2000);
+    } else {
+      setIsSubmitted(true);
+    }
   };
 
   return (
@@ -85,7 +114,7 @@ const Modal = ({ isOpen, onClose, title, type }: any) => {
                   {type === 'login' 
                     ? "You have successfully logged into your account." 
                     : type === 'demo'
-                    ? "Our team will contact you shortly to schedule your personalized walkthrough."
+                    ? "Our team will contact you shortly. Your demo presentation is now unlocked below!"
                     : "Your 14-day free trial has started. Check your email for login details."}
                 </p>
                 <Button className="w-full" onClick={onClose}>Close</Button>
@@ -98,10 +127,16 @@ const Modal = ({ isOpen, onClose, title, type }: any) => {
                     ? "Start your 14-day free trial. No credit card required." 
                     : type === 'demo'
                     ? "Schedule a personalized walkthrough with our experts."
-                    : "Enter your credentials to access your dashboard."}
+                    : "Enter your credentials to access your dashboard. (Try admin@paybill.com / admin123)"}
                 </p>
                 
                 <form className="space-y-4" onSubmit={handleSubmit}>
+                  {error && (
+                    <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg">
+                      {error}
+                    </div>
+                  )}
+
                   {type !== 'login' && (
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
@@ -111,13 +146,27 @@ const Modal = ({ isOpen, onClose, title, type }: any) => {
                   
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Work Email</label>
-                    <input required type="email" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="rahul@company.com" />
+                    <input 
+                      required 
+                      type="email" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" 
+                      placeholder={type === 'login' ? "admin@paybill.com" : "rahul@company.com"} 
+                    />
                   </div>
 
                   {type === 'login' && (
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                      <input required type="password" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="••••••••" />
+                      <input 
+                        required 
+                        type="password" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" 
+                        placeholder="admin123" 
+                      />
                     </div>
                   )}
                   
@@ -167,7 +216,7 @@ const Modal = ({ isOpen, onClose, title, type }: any) => {
 
 // --- Sections ---
 
-const Navbar = ({ onOpenModal }: any) => {
+const Navbar = ({ onOpenModal, loggedInUser, onLogout }: any) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -196,7 +245,14 @@ const Navbar = ({ onOpenModal }: any) => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" className="px-4 py-2" onClick={() => onOpenModal('login')}>Log in</Button>
+            {loggedInUser ? (
+              <>
+                <span className="text-sm font-medium text-slate-700">Hi, {loggedInUser.name}</span>
+                <Button variant="ghost" className="px-4 py-2" onClick={onLogout}>Log out</Button>
+              </>
+            ) : (
+              <Button variant="ghost" className="px-4 py-2" onClick={() => onOpenModal('login')}>Log in</Button>
+            )}
             <Button className="px-5 py-2" onClick={() => onOpenModal('demo')}>Book Demo</Button>
           </div>
 
@@ -213,7 +269,14 @@ const Navbar = ({ onOpenModal }: any) => {
           <a href="#workflow" className="text-base font-medium text-slate-700" onClick={() => setIsMobileMenuOpen(false)}>How it Works</a>
           <a href="#pricing" className="text-base font-medium text-slate-700" onClick={() => setIsMobileMenuOpen(false)}>Pricing</a>
           <div className="pt-4 border-t border-slate-100 flex flex-col space-y-3">
-            <Button variant="secondary" className="w-full justify-center" onClick={() => { setIsMobileMenuOpen(false); onOpenModal('login'); }}>Log in</Button>
+            {loggedInUser ? (
+              <>
+                <span className="text-center text-sm font-medium text-slate-700">Hi, {loggedInUser.name}</span>
+                <Button variant="secondary" className="w-full justify-center" onClick={() => { setIsMobileMenuOpen(false); onLogout(); }}>Log out</Button>
+              </>
+            ) : (
+              <Button variant="secondary" className="w-full justify-center" onClick={() => { setIsMobileMenuOpen(false); onOpenModal('login'); }}>Log in</Button>
+            )}
             <Button className="w-full justify-center" onClick={() => { setIsMobileMenuOpen(false); onOpenModal('demo'); }}>Book Demo</Button>
           </div>
         </div>
@@ -729,6 +792,47 @@ const DashboardPreview = () => {
   );
 };
 
+const DemoPresentation = ({ isUnlocked }: { isUnlocked: boolean }) => {
+  if (!isUnlocked) return null;
+
+  return (
+    <section id="demo-presentation" className="py-24 bg-slate-900 text-white overflow-hidden relative border-t border-slate-800">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-12">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold mb-6 border border-emerald-500/30"
+          >
+            <CheckCircle2 className="w-5 h-5" />
+            Demo Successfully Unlocked
+          </motion.div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">PayBill India Interactive Demo</h2>
+          <p className="text-lg text-slate-400">Watch the presentation below to see how PayBill can transform your business.</p>
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="aspect-video bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl relative flex items-center justify-center group"
+        >
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000')] opacity-40 bg-cover bg-center mix-blend-overlay"></div>
+          <div className="absolute inset-0 bg-slate-900/60 group-hover:bg-slate-900/50 transition-colors"></div>
+          
+          <div className="relative z-10 text-center">
+            <div className="w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 cursor-pointer hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/30 group-hover:scale-110 transform duration-300">
+              <PlayCircle className="w-10 h-10 text-white ml-1" />
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Product Walkthrough</h3>
+            <p className="text-slate-300">12:45 Mins • Full Platform Overview</p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 const TrustSection = () => {
   return (
     <section className="py-20 bg-indigo-50">
@@ -854,6 +958,8 @@ const Footer = () => {
 
 export default function App() {
   const [modalState, setModalState] = useState({ isOpen: false, type: 'trial', title: '' });
+  const [loggedInUser, setLoggedInUser] = useState<any>(null);
+  const [isDemoUnlocked, setIsDemoUnlocked] = useState(false);
 
   const openModal = (type: 'trial' | 'demo' | 'login') => {
     let title = '';
@@ -872,15 +978,28 @@ export default function App() {
     setModalState(prev => ({ ...prev, isOpen: false }));
   };
 
+  const handleLogin = (user: any) => {
+    setLoggedInUser(user);
+  };
+
+  const handleLogout = () => {
+    setLoggedInUser(null);
+  };
+
+  const handleDemoBooked = () => {
+    setIsDemoUnlocked(true);
+  };
+
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-indigo-100 selection:text-indigo-900">
-      <Navbar onOpenModal={openModal} />
+      <Navbar onOpenModal={openModal} loggedInUser={loggedInUser} onLogout={handleLogout} />
       <main>
         <Hero onOpenModal={openModal} />
         <ProblemSolution />
         <Features />
         <Workflow />
         <DashboardPreview />
+        <DemoPresentation isUnlocked={isDemoUnlocked} />
         <Pricing onOpenModal={openModal} />
         <Testimonials />
         <TrustSection />
@@ -892,6 +1011,8 @@ export default function App() {
         onClose={closeModal} 
         title={modalState.title} 
         type={modalState.type} 
+        onLogin={handleLogin}
+        onDemoBooked={handleDemoBooked}
       />
     </div>
   );
