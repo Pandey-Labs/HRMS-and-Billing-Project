@@ -1031,7 +1031,7 @@ const AboutUs = () => {
   );
 };
 
-const ContactUs = () => {
+const ContactUs = ({ loggedInUser }: { loggedInUser: any }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -1039,6 +1039,15 @@ const ContactUs = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (loggedInUser) {
+      const names = loggedInUser.name?.split(' ') || [];
+      setFirstName(names[0] || '');
+      setLastName(names.slice(1).join(' ') || '');
+      setEmail(loggedInUser.email || '');
+    }
+  }, [loggedInUser]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1051,12 +1060,31 @@ const ContactUs = () => {
         lastName,
         email,
         message,
+        isLoggedIn: !!loggedInUser,
         createdAt: serverTimestamp()
       });
+
+      // Send email via backend API
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          message,
+          isLoggedIn: !!loggedInUser
+        }),
+      });
+
       setSubmitSuccess(true);
-      setFirstName('');
-      setLastName('');
-      setEmail('');
+      if (!loggedInUser) {
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+      }
       setMessage('');
       setTimeout(() => setSubmitSuccess(false), 5000);
     } catch (err: any) {
@@ -1228,7 +1256,7 @@ export default function App() {
         <Testimonials />
         <AboutUs />
         <TrustSection />
-        <ContactUs />
+        <ContactUs loggedInUser={loggedInUser} />
         <CtaSection onOpenModal={openModal} />
       </main>
       <Footer />
