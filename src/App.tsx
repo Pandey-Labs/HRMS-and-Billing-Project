@@ -31,7 +31,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 // --- UI Components ---
 
 const Button = ({ children, variant = 'primary', className = '', ...props }: any) => {
-  const baseStyle = "inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2";
+  const baseStyle = "inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transform hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0";
   const variants = {
     primary: "bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500 shadow-sm hover:shadow",
     secondary: "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 focus:ring-slate-500 shadow-sm",
@@ -374,12 +374,12 @@ const Hero = ({ onOpenModal }: any) => {
           className="mt-16 relative max-w-5xl mx-auto"
         >
           <div className="rounded-2xl border border-slate-200/60 bg-white/50 backdrop-blur-xl p-2 shadow-2xl">
-            <div className="rounded-xl overflow-hidden border border-slate-100 bg-slate-50 aspect-[16/9] relative">
+            <div className="rounded-xl overflow-hidden border border-slate-100 bg-slate-50 aspect-[16/9] relative group">
               {/* Placeholder for actual dashboard image */}
               <img 
                 src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000" 
                 alt="Dashboard Preview" 
-                className="w-full h-full object-cover opacity-90"
+                className="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 to-transparent"></div>
@@ -402,7 +402,7 @@ const ProblemSolution = () => {
 
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Problem */}
-          <div className="bg-red-50 rounded-2xl p-8 border border-red-100">
+          <div className="bg-red-50 rounded-2xl p-8 border border-red-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
             <h3 className="text-xl font-bold text-red-900 mb-6 flex items-center gap-2">
               <X className="w-6 h-6 text-red-500" /> The Old Way
             </h3>
@@ -422,8 +422,8 @@ const ProblemSolution = () => {
           </div>
 
           {/* Solution */}
-          <div className="bg-indigo-50 rounded-2xl p-8 border border-indigo-100 relative overflow-hidden">
-            <div className="absolute -right-10 -top-10 w-40 h-40 bg-indigo-100 rounded-full blur-3xl opacity-50"></div>
+          <div className="bg-indigo-50 rounded-2xl p-8 border border-indigo-100 relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group">
+            <div className="absolute -right-10 -top-10 w-40 h-40 bg-indigo-100 rounded-full blur-3xl opacity-50 transition-transform duration-500 group-hover:scale-150"></div>
             <h3 className="text-xl font-bold text-indigo-900 mb-6 flex items-center gap-2 relative z-10">
               <CheckCircle2 className="w-6 h-6 text-indigo-600" /> The DigitalSoftware Way
             </h3>
@@ -486,14 +486,14 @@ const Features = () => {
               </div>
               <p className="text-lg text-slate-600 mb-8 max-w-xl">Manage your entire workforce from onboarding to exit. Automate salary calculations, ensure statutory compliance, and empower employees with self-service tools.</p>
             </div>
-            <div className="flex-1 w-full">
-              <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1000&q=80" alt="HR Management Dashboard" className="rounded-2xl shadow-xl w-full object-cover aspect-video" referrerPolicy="no-referrer" />
+            <div className="flex-1 w-full overflow-hidden rounded-2xl shadow-xl">
+              <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1000&q=80" alt="HR Management Dashboard" className="w-full object-cover aspect-video transition-transform duration-700 hover:scale-110" referrerPolicy="no-referrer" />
             </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {hrFeatures.map((feature, i) => (
-              <div key={i} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center text-indigo-600 mb-4">
+              <div key={i} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+                <div className="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center text-indigo-600 mb-4 transition-colors duration-300 group-hover:bg-indigo-600 group-hover:text-white">
                   {feature.icon}
                 </div>
                 <h4 className="text-lg font-semibold text-slate-900 mb-2">{feature.title}</h4>
@@ -515,14 +515,14 @@ const Features = () => {
               </div>
               <p className="text-lg text-slate-600 mb-8 max-w-xl">Streamline your retail operations with our lightning-fast POS. Generate GST-compliant invoices, track inventory in real-time, and get actionable sales insights.</p>
             </div>
-            <div className="flex-1 w-full">
-              <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=80" alt="Retail POS System" className="rounded-2xl shadow-xl w-full object-cover aspect-video" referrerPolicy="no-referrer" />
+            <div className="flex-1 w-full overflow-hidden rounded-2xl shadow-xl">
+              <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=80" alt="Retail POS System" className="w-full object-cover aspect-video transition-transform duration-700 hover:scale-110" referrerPolicy="no-referrer" />
             </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {billingFeatures.map((feature, i) => (
-              <div key={i} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center text-emerald-600 mb-4">
+              <div key={i} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+                <div className="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center text-emerald-600 mb-4 transition-colors duration-300 group-hover:bg-emerald-600 group-hover:text-white">
                   {feature.icon}
                 </div>
                 <h4 className="text-lg font-semibold text-slate-900 mb-2">{feature.title}</h4>
@@ -561,8 +561,8 @@ const Workflow = () => {
           
           <div className="grid lg:grid-cols-5 gap-8 lg:gap-4 relative z-10">
             {steps.map((step, i) => (
-              <div key={i} className="relative flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-slate-800 border-4 border-slate-900 flex items-center justify-center text-xl font-bold text-indigo-400 mb-6 shadow-xl">
+              <div key={i} className="relative flex flex-col items-center text-center group cursor-pointer">
+                <div className="w-16 h-16 rounded-full bg-slate-800 border-4 border-slate-900 flex items-center justify-center text-xl font-bold text-indigo-400 mb-6 shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-400">
                   {step.num}
                 </div>
                 <h4 className="text-lg font-semibold mb-2">{step.title}</h4>
@@ -587,7 +587,7 @@ const Pricing = ({ onOpenModal }: any) => {
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {/* Starter */}
-          <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm flex flex-col">
+          <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
             <h3 className="text-xl font-semibold text-slate-900 mb-2">Starter</h3>
             <p className="text-slate-500 text-sm mb-6">Perfect for small retail shops.</p>
             <div className="mb-6">
@@ -606,7 +606,7 @@ const Pricing = ({ onOpenModal }: any) => {
           </div>
 
           {/* Professional */}
-          <div className="bg-indigo-600 rounded-3xl p-8 border border-indigo-500 shadow-xl flex flex-col relative transform md:-translate-y-4">
+          <div className="bg-indigo-600 rounded-3xl p-8 border border-indigo-500 shadow-xl flex flex-col relative transform md:-translate-y-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-6">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-400 to-indigo-400 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
               Most Popular
             </div>
@@ -628,7 +628,7 @@ const Pricing = ({ onOpenModal }: any) => {
           </div>
 
           {/* Enterprise */}
-          <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm flex flex-col">
+          <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
             <h3 className="text-xl font-semibold text-slate-900 mb-2">Enterprise</h3>
             <p className="text-slate-500 text-sm mb-6">For large operations with multiple branches.</p>
             <div className="mb-6">
@@ -682,8 +682,8 @@ const Testimonials = () => {
 
         <div className="grid md:grid-cols-3 gap-8">
           {reviews.map((review, i) => (
-            <div key={i} className="bg-slate-50 rounded-2xl p-8 border border-slate-100">
-              <div className="flex gap-1 mb-6">
+            <div key={i} className="bg-slate-50 rounded-2xl p-8 border border-slate-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-white cursor-pointer group">
+              <div className="flex gap-1 mb-6 transition-transform duration-300 group-hover:scale-105 origin-left">
                 {[...Array(review.rating)].map((_, j) => (
                   <Star key={j} className="w-5 h-5 fill-amber-400 text-amber-400" />
                 ))}
@@ -721,7 +721,7 @@ const DashboardPreview = () => {
             className="relative"
           >
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl blur opacity-30"></div>
-            <div className="relative bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl">
+            <div className="relative bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl transition-transform duration-500 hover:scale-[1.02] cursor-pointer">
               <div className="bg-slate-900 px-4 py-3 border-b border-slate-700 flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500"></div>
                 <div className="w-3 h-3 rounded-full bg-amber-500"></div>
@@ -771,7 +771,7 @@ const DashboardPreview = () => {
             className="relative"
           >
             <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur opacity-30"></div>
-            <div className="relative bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl">
+            <div className="relative bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl transition-transform duration-500 hover:scale-[1.02] cursor-pointer">
               <div className="bg-slate-900 px-4 py-3 border-b border-slate-700 flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500"></div>
                 <div className="w-3 h-3 rounded-full bg-amber-500"></div>
@@ -880,24 +880,24 @@ const TrustSection = () => {
     <section className="py-20 bg-indigo-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="flex flex-col items-center text-center p-6">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6">
+          <div className="flex flex-col items-center text-center p-6 transition-all duration-300 hover:-translate-y-2 group cursor-pointer">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 transition-transform duration-300 group-hover:scale-110 group-hover:shadow-md">
               <ShieldCheck className="w-8 h-8 text-indigo-600" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">Bank-Grade Security</h3>
             <p className="text-slate-600 text-sm">Your financial and employee data is encrypted with 256-bit AES encryption and hosted on secure AWS servers in Mumbai.</p>
           </div>
           
-          <div className="flex flex-col items-center text-center p-6">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6">
+          <div className="flex flex-col items-center text-center p-6 transition-all duration-300 hover:-translate-y-2 group cursor-pointer">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 transition-transform duration-300 group-hover:scale-110 group-hover:shadow-md">
               <FileText className="w-8 h-8 text-indigo-600" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">100% Compliant</h3>
             <p className="text-slate-600 text-sm">Always up-to-date with the latest Indian tax laws. Automatically handles GST, TDS, PF, ESIC, and Professional Tax calculations.</p>
           </div>
           
-          <div className="flex flex-col items-center text-center p-6">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6">
+          <div className="flex flex-col items-center text-center p-6 transition-all duration-300 hover:-translate-y-2 group cursor-pointer">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 transition-transform duration-300 group-hover:scale-110 group-hover:shadow-md">
               <Users className="w-8 h-8 text-indigo-600" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">Dedicated Support</h3>
@@ -1007,8 +1007,8 @@ const AboutUs = () => {
           <p className="text-lg text-slate-600">We are on a mission to simplify business operations for Indian SMBs through powerful, intuitive, and compliant software.</p>
         </div>
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Our Team" className="rounded-2xl shadow-lg" referrerPolicy="no-referrer" />
+          <div className="overflow-hidden rounded-2xl shadow-lg">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Our Team" className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" referrerPolicy="no-referrer" />
           </div>
           <div className="space-y-6">
             <h3 className="text-2xl font-bold text-slate-900">Empowering Businesses Since 2020</h3>
