@@ -30,7 +30,7 @@ app.post("/api/contact", async (req, res) => {
     const resend = getResend();
     if (resend) {
       const { data, error } = await resend.emails.send({
-        from: "DigitalSoftware <onboarding@resend.dev>", // Resend testing domain
+        from: "BridgeBricksSolutions <onboarding@resend.dev>", // Resend testing domain
         to: ["adarshsupport@dev2dev.in"],
         subject: `New Contact Message from ${firstName} ${lastName}`,
         html: `

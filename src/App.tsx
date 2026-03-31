@@ -68,14 +68,14 @@ const Modal = ({ isOpen, onClose, title, type, onLogin, onDemoBooked }: any) => 
     setError('');
 
     if (type === 'login') {
-      if (email === 'admin@digitalsoftware.com' && password === 'admin123') {
+      if (email === 'admin@bridgebrickssolutions.com' && password === 'admin123') {
         setIsSubmitted(true);
         onLogin({ name: 'Admin User', email });
         setTimeout(() => {
           onClose();
         }, 2000);
       } else {
-        setError('Invalid email or password. Try admin@digitalsoftware.com / admin123');
+        setError('Invalid email or password. Try admin@bridgebrickssolutions.com / admin123');
       }
     } else if (type === 'demo') {
       setIsSubmitted(true);
@@ -133,7 +133,7 @@ const Modal = ({ isOpen, onClose, title, type, onLogin, onDemoBooked }: any) => 
                     ? "Start your 14-day free trial. No credit card required." 
                     : type === 'demo'
                     ? "Schedule a personalized walkthrough with our experts."
-                    : "Enter your credentials to access your dashboard. (Try admin@digitalsoftware.com / admin123)"}
+                    : "Enter your credentials to access your dashboard. (Try admin@bridgebrickssolutions.com / admin123)"}
                 </p>
                 
                 <form className="space-y-4" onSubmit={handleSubmit}>
@@ -158,7 +158,7 @@ const Modal = ({ isOpen, onClose, title, type, onLogin, onDemoBooked }: any) => 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" 
-                      placeholder={type === 'login' ? "admin@digitalsoftware.com" : "rahul@company.com"} 
+                      placeholder={type === 'login' ? "admin@bridgebrickssolutions.com" : "rahul@company.com"} 
                     />
                   </div>
 
@@ -240,7 +240,7 @@ const Navbar = ({ onOpenModal, loggedInUser, onLogout }: any) => {
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
               <IndianRupee className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-slate-900 tracking-tight">Digital<span className="text-indigo-600">Software</span></span>
+            <span className="text-xl font-bold text-slate-900 tracking-tight">BridgeBricks<span className="text-indigo-600">Solutions</span></span>
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
@@ -425,7 +425,7 @@ const ProblemSolution = () => {
           <div className="bg-indigo-50 rounded-2xl p-8 border border-indigo-100 relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group">
             <div className="absolute -right-10 -top-10 w-40 h-40 bg-indigo-100 rounded-full blur-3xl opacity-50 transition-transform duration-500 group-hover:scale-150"></div>
             <h3 className="text-xl font-bold text-indigo-900 mb-6 flex items-center gap-2 relative z-10">
-              <CheckCircle2 className="w-6 h-6 text-indigo-600" /> The DigitalSoftware Way
+              <CheckCircle2 className="w-6 h-6 text-indigo-600" /> The BridgeBricksSolutions Way
             </h3>
             <ul className="space-y-4 relative z-10">
               {[
@@ -551,7 +551,7 @@ const Workflow = () => {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">How DigitalSoftware Works</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">How BridgeBricksSolutions Works</h2>
           <p className="text-lg text-slate-400">A streamlined workflow designed to save you 40+ hours every month.</p>
         </div>
 
@@ -653,7 +653,7 @@ const Pricing = ({ onOpenModal }: any) => {
 const Testimonials = () => {
   const reviews = [
     {
-      quote: "Before DigitalSoftware, month-end payroll took us 3 days and we still made PF calculation errors. Now it takes 15 minutes. The GST billing is just a bonus for our retail outlet.",
+      quote: "Before BridgeBricksSolutions, month-end payroll took us 3 days and we still made PF calculation errors. Now it takes 15 minutes. The GST billing is just a bonus for our retail outlet.",
       author: "Rajesh Kumar",
       role: "Director, Sharma Electronics",
       rating: 5
@@ -665,7 +665,7 @@ const Testimonials = () => {
       rating: 5
     },
     {
-      quote: "We switched from using separate software for accounting and HR. DigitalSoftware unified everything. Their support team actually understands Indian compliance laws.",
+      quote: "We switched from using separate software for accounting and HR. BridgeBricksSolutions unified everything. Their support team actually understands Indian compliance laws.",
       author: "Amit Patel",
       role: "HR Head, Apex Manufacturing",
       rating: 5
@@ -831,8 +831,8 @@ const DemoPresentation = ({ isUnlocked }: { isUnlocked: boolean }) => {
             <CheckCircle2 className="w-5 h-5" />
             Demo Successfully Unlocked
           </motion.div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">DigitalSoftware Interactive Demo</h2>
-          <p className="text-lg text-slate-400">Watch the presentation below to see how DigitalSoftware can transform your business.</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">BridgeBricksSolutions Interactive Demo</h2>
+          <p className="text-lg text-slate-400">Watch the presentation below to see how BridgeBricksSolutions can transform your business.</p>
         </div>
 
         <motion.div 
@@ -946,7 +946,7 @@ const Footer = () => {
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                 <IndianRupee className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white tracking-tight">Digital<span className="text-indigo-500">Software</span></span>
+              <span className="text-xl font-bold text-white tracking-tight">BridgeBricks<span className="text-indigo-500">Solutions</span></span>
             </div>
             <p className="text-sm text-slate-400 mb-6">
               The unified platform for Indian SMBs to manage payroll, compliance, and retail billing effortlessly.
@@ -985,7 +985,7 @@ const Footer = () => {
         </div>
         
         <div className="pt-8 border-t border-slate-800 text-sm text-slate-500 flex flex-col md:flex-row justify-between items-center">
-          <p>© 2026 DigitalSoftware Technologies Pvt. Ltd. All rights reserved.</p>
+          <p>© 2026 BridgeBricksSolutions Technologies Pvt. Ltd. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             {/* Social Icons Placeholder */}
             <div className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 cursor-pointer"></div>
@@ -1003,7 +1003,7 @@ const AboutUs = () => {
     <section id="about" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">About DigitalSoftware</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">About BridgeBricksSolutions</h2>
           <p className="text-lg text-slate-600">We are on a mission to simplify business operations for Indian SMBs through powerful, intuitive, and compliant software.</p>
         </div>
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -1012,7 +1012,7 @@ const AboutUs = () => {
           </div>
           <div className="space-y-6">
             <h3 className="text-2xl font-bold text-slate-900">Empowering Businesses Since 2020</h3>
-            <p className="text-slate-600">DigitalSoftware was founded with a simple idea: managing payroll, HR, and retail billing shouldn't require multiple disjointed systems. We built an all-in-one platform that brings everything together.</p>
+            <p className="text-slate-600">BridgeBricksSolutions was founded with a simple idea: managing payroll, HR, and retail billing shouldn't require multiple disjointed systems. We built an all-in-one platform that brings everything together.</p>
             <p className="text-slate-600">Today, thousands of businesses across India trust us to handle their most critical operations, ensuring 100% compliance with GST, PF, and ESIC regulations.</p>
             <div className="grid grid-cols-2 gap-6 pt-4">
               <div>
@@ -1100,7 +1100,7 @@ const ContactUs = ({ loggedInUser }: { loggedInUser: any }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Get in Touch</h2>
-          <p className="text-lg text-slate-600">Have questions? Our team is here to help you get started with DigitalSoftware.</p>
+          <p className="text-lg text-slate-600">Have questions? Our team is here to help you get started with BridgeBricksSolutions.</p>
         </div>
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 space-y-8">
